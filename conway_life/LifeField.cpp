@@ -82,6 +82,13 @@ void CellularField::testPatternDraw(TESTPATTERN inputPattern, int shift = 0)
 				rest = (((shift + i) % 2) != 0 ? 1 : 0);
 				break;
 			}
+			case TESTPATTERN::SIN_PATTERN: 
+			{
+				double d = std::sin((double)(i * j * shift));
+				if (d >= 0.5) rest = 1;
+				else rest = 0;
+				break;
+			}
 			}
 			((rest == 1) ? this->cells.at(i).at(j).set_isCellAlive(true) : this->cells.at(i).at(j).set_isCellAlive(false));
 			//std::cout << "rest " << rest << std::endl;
@@ -113,4 +120,47 @@ int CellularField::get_NumberOfCells_inFonNeimanSpace(int xPos, int yPos)
 		}
 	}
 	return returnResult;
+}
+
+void CellularField::make_ConwayLife_iteration()
+{
+	
+	std::vector<std::vector<bool>> newLifeConditionBuffer;
+	for (int i = 0; i < this->cells.size(); i++)
+	{
+		std::vector<bool> rowBuffer;
+		for (int j = 0; j < this->cells.at(i).size(); j++)
+		{
+			int livingCellsCounter = this->get_NumberOfCells_inFonNeimanSpace(j, i);
+			//std::cout << "livingCellsCounter " << livingCellsCounter << std::endl;
+			bool inputVal = false;
+			if (this->cells.at(i).at(j).get_isCellAlive())
+			{
+				
+				if ((livingCellsCounter == 2) || (livingCellsCounter == 3))
+				{
+					inputVal = true;
+					
+				}
+				else inputVal = false;
+			}
+			else
+			{
+				
+				if (livingCellsCounter == 3) inputVal = true;
+				else inputVal = false;
+			}
+			rowBuffer.push_back(inputVal);
+		}
+		newLifeConditionBuffer.push_back(rowBuffer);
+	}
+
+	for (int i = 0; i < this->cells.size(); i++)
+	{
+
+		for (int j = 0; j < this->cells.at(i).size(); j++)
+		{
+			this->cells.at(i).at(j).set_isCellAlive(newLifeConditionBuffer.at(i).at(j));
+		}
+	}
 }

@@ -2,13 +2,15 @@
 #include <SFML/Graphics.hpp>
 #include "cell.h"
 #include <vector>
+#include <math.h>
 enum class TESTPATTERN
 {
 	CHESS_PATTERN,
 	VERTICAL_STRIPE_PATTERN_EVEN, 
 	VERTICAL_STRIPE_PATTERN_ODD, 
 	HORIZONTAL_STRIPE_PATTERN_EVEN, 
-	HORIZONTAL_STRIPE_PATTERN_ODD 
+	HORIZONTAL_STRIPE_PATTERN_ODD, 
+	SIN_PATTERN
 };
 class CellularField
 {
@@ -19,6 +21,7 @@ public:
 	void set_startPoint(sf::Vector2f newStartPoint);
 	void testPatternDraw(TESTPATTERN inputPattern, int shift );
 	int get_NumberOfCells_inFonNeimanSpace(int xPos, int yPos);
+	void make_ConwayLife_iteration();
 	private: 
 		sf::Vector2f startPoint;
 		float height;
