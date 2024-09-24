@@ -164,3 +164,41 @@ void CellularField::make_ConwayLife_iteration()
 		}
 	}
 }
+
+sf::Vector2f CellularField::get_cellShapeCoordsByPointCoords(sf::Vector2f coords)
+{
+	for (int i = 0; i < this->cells.size(); i++)
+	{
+		for (int j = 0; j < this->cells.at(i).size();j++)
+		{
+			if (this->cells.at(i).at(j).get_isPointInCell(coords)) return sf::Vector2f{(float)j, float(i)};
+		}
+	}
+	return sf::Vector2f{-1.0f, -1.0f};
+}
+
+bool CellularField::get_conditionOfOneCell(sf::Vector2f coords)
+{
+	if (coords.y >= 0 && coords.y < this->cells.size())
+	{
+		if (coords.x >= 0 && coords.x < this->cells.at((int)coords.y).size())
+		{
+			return this->cells.at((int)coords.y).at((int)coords.x).get_isCellAlive();
+		}
+		else return false;
+	}
+	else return false;
+	return false;
+}
+void CellularField::set_conditionOfOneCell(sf::Vector2f coords, bool input)
+{
+	if (coords.y >= 0 && coords.y < this->cells.size())
+	{
+		if (coords.x >= 0 && coords.x < this->cells.at((int)coords.y).size())
+		{
+			this->cells.at((int)coords.y).at((int)coords.x).set_isCellAlive(input);
+		}
+		
+	}
+	
+}

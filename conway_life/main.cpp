@@ -3,6 +3,15 @@
 #include "cell.h"
 #include "LifeField.h"
 #include <iostream>
+
+void do_mouse_input(sf::RenderWindow &window, CellularField &cellField)
+{
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    sf::Vector2f cellpos = cellField.get_cellShapeCoordsByPointCoords(sf::Vector2f{(float)mousePos.x, (float)mousePos.y});
+    std::cout << cellpos.x << " " << cellpos.y << std::endl;
+    cellField.set_conditionOfOneCell(cellpos, cellField.get_conditionOfOneCell(cellpos));
+}
+
 int main()
 {
     srand(time(NULL));
@@ -27,7 +36,12 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        if (clock.getElapsedTime().asMilliseconds() > 100)
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            //std::cout << "clicking mouse" << std::endl;
+            do_mouse_input(window, field);
+        }
+        if (clock.getElapsedTime().asMilliseconds() > 1000)
         {
             field.make_ConwayLife_iteration();
             //std::cout << "test counter " << field.get_NumberOfCells_inFonNeimanSpace(1, 1) << std::endl;

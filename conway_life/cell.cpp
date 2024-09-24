@@ -35,3 +35,8 @@ bool Cell::get_isCellAlive()
 {
 	return this->isCellAlive;
 }
+
+bool Cell::get_isPointInCell(sf::Vector2f pointCoords)
+{
+	return this->cellShape.getGlobalBounds().contains(pointCoords);
+}

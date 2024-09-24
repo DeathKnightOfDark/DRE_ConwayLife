@@ -8,9 +8,10 @@ public:
 	void drawCell(sf::RenderWindow &inputWindow);
 	void set_isCellAlive(bool input);
 	bool get_isCellAlive();
-
+	bool get_isPointInCell(sf::Vector2f pointCoords);
 private:
 	sf::RectangleShape cellShape;
+	
 	sf::Vector2f cellStartPosition;
 	int cellSizeInPixels;
 	bool isCellAlive;

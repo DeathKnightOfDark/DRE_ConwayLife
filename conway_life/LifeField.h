@@ -22,6 +22,9 @@ public:
 	void testPatternDraw(TESTPATTERN inputPattern, int shift );
 	int get_NumberOfCells_inFonNeimanSpace(int xPos, int yPos);
 	void make_ConwayLife_iteration();
+	sf::Vector2f get_cellShapeCoordsByPointCoords(sf::Vector2f coords);
+	bool get_conditionOfOneCell(sf::Vector2f coords);
+	void set_conditionOfOneCell(sf::Vector2f coords, bool input);
 	private: 
 		sf::Vector2f startPoint;
 		float height;
