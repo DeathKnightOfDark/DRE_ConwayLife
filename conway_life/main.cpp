@@ -34,8 +34,8 @@ int main()
     
     sf::Clock clock;
     sf::Clock inputClock;
-    int shift = 42;
-    uint8_t rule = 0;
+    int shift = 22;
+    uint8_t rule = 110;
     field.testPatternDraw(TESTPATTERN::SIN_PATTERN, shift);
     
     bool isMouseAlreadyClicked = false;
@@ -69,7 +69,7 @@ int main()
                 shift += 10;
                 field.testPatternDraw(TESTPATTERN::SIN_PATTERN, shift);
                 inputClock.restart();
-                rule+=10;
+                rule+=11;
             }
             
             }
@@ -79,7 +79,7 @@ int main()
            
             if (runLife)
             {
-                //field.make_ConwayLife_iteration();
+                //field.make_ConwayLife_iteration(3,7, 1, 6);
                 field.make_WolrframCellularAutomata_Iteration(rule);
                 //std::cout << "test counter " << field.get_NumberOfCells_inFonNeimanSpace(1, 1) << std::endl;
             }

@@ -11,7 +11,9 @@ enum class TESTPATTERN
 	VERTICAL_STRIPE_PATTERN_ODD, 
 	HORIZONTAL_STRIPE_PATTERN_EVEN, 
 	HORIZONTAL_STRIPE_PATTERN_ODD, 
-	SIN_PATTERN
+	SIN_PATTERN, 
+	SQUARE_CENTRAL, 
+	CLEAR_PATTERN
 };
 class CellularField
 {
@@ -25,7 +27,7 @@ public:
 
 	uint8_t get_Byte_inFonNeimanSpace(int xPos, int yPos);
 	uint8_t get_Byte_fromWolframSpace(int xPos, int yPos);
-	void make_ConwayLife_iteration();
+	void make_ConwayLife_iteration(int cellsToBirthMin, int cellsToBirthMax, int minCellsToSurvive, int maxCellsToSurvive);
 	void make_WolrframCellularAutomata_Iteration(uint8_t rule);
 	sf::Vector2f get_cellShapeCoordsByPointCoords(sf::Vector2f coords);
 	bool get_conditionOfOneCell(sf::Vector2f coords);

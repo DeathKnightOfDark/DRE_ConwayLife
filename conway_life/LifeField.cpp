@@ -89,6 +89,17 @@ void CellularField::testPatternDraw(TESTPATTERN inputPattern, int shift = 0)
 				else rest = 0;
 				break;
 			}
+			case TESTPATTERN::SQUARE_CENTRAL: 
+			{
+				if ((i >= 30) && (i <= 60) && (j >= 30) && (j <= 60)) rest = 1;
+				else rest = 0;
+				break;
+			}
+			case TESTPATTERN::CLEAR_PATTERN:
+			{
+				rest = 0;
+				break;
+			}
 			}
 			this->cells.at(i).at(j).nullify_cellAge();
 			((rest == 1) ? this->cells.at(i).at(j).set_isCellAlive(true) : this->cells.at(i).at(j).set_isCellAlive(false));
@@ -117,7 +128,8 @@ int CellularField::get_NumberOfCells_inFonNeimanSpace(int xPos, int yPos)
 	{
 		for (auto itX = xPoses.begin(); itX != xPoses.end(); itX++)
 		{
-			(this->cells.at(*itY).at(*itX).get_isCellAlive()) ? returnResult++ : (returnResult+=0);
+			if (!((*itY==yPos)&&(*itX==xPos))) (this->cells.at(*itY).at(*itX).get_isCellAlive()) ? returnResult++ : (returnResult+=0);
+			
 		}
 	}
 	return returnResult;
@@ -177,9 +189,8 @@ uint8_t CellularField::get_Byte_inFonNeimanSpace(int xPos, int yPos)
 	return 0;
 }
 
-void CellularField::make_ConwayLife_iteration()
+void CellularField::make_ConwayLife_iteration(int cellsToBirthMin, int cellsToBirthMax, int minCellsToSurvive, int maxCellsToSurvive)
 {
-	
 	std::vector<std::vector<bool>> newLifeConditionBuffer;
 	for (int i = 0; i < this->cells.size(); i++)
 	{
@@ -192,7 +203,7 @@ void CellularField::make_ConwayLife_iteration()
 			if (this->cells.at(i).at(j).get_isCellAlive())
 			{
 				
-				if ((livingCellsCounter == 2) || (livingCellsCounter == 3))
+				if ((livingCellsCounter == minCellsToSurvive) || (livingCellsCounter == maxCellsToSurvive))
 				{
 					inputVal = true;
 					
@@ -202,7 +213,7 @@ void CellularField::make_ConwayLife_iteration()
 			else
 			{
 				
-				if (livingCellsCounter == 3) inputVal = true;
+				if ((livingCellsCounter >= cellsToBirthMin)&&(livingCellsCounter<=cellsToBirthMax)) inputVal = true;
 				else inputVal = false;
 			}
 			rowBuffer.push_back(inputVal);
