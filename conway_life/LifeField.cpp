@@ -90,6 +90,7 @@ void CellularField::testPatternDraw(TESTPATTERN inputPattern, int shift = 0)
 				break;
 			}
 			}
+			this->cells.at(i).at(j).nullify_cellAge();
 			((rest == 1) ? this->cells.at(i).at(j).set_isCellAlive(true) : this->cells.at(i).at(j).set_isCellAlive(false));
 			//std::cout << "rest " << rest << std::endl;
 		}
@@ -120,6 +121,60 @@ int CellularField::get_NumberOfCells_inFonNeimanSpace(int xPos, int yPos)
 		}
 	}
 	return returnResult;
+}
+
+uint8_t CellularField::get_Byte_fromWolframSpace(int xPos, int yPos)
+{
+	if ((yPos < 0) || (yPos >= this->cells.size())) return 0xFF;
+	if ((xPos < 0) || (xPos >= this->cells.at(yPos).size())) return 0xFF;
+	int xPrevPos, xNextPos;
+	if (xPos - 1 >= 0) xPrevPos = xPos - 1;
+	else xPrevPos = this->cells.at(yPos).size() - 1;
+	if (xPos + 1 < this->cells.at(yPos).size()) xNextPos = xPos + 1;
+	else xNextPos = 0;
+	uint8_t returnResult = 0;
+	if (this->cells.at(yPos).at(xPrevPos).get_isCellAlive()) returnResult = returnResult | 0x1;
+	if (this->cells.at(yPos).at(xPos).get_isCellAlive()) returnResult = returnResult | 0x2;
+	if (this->cells.at(yPos).at(xNextPos).get_isCellAlive()) returnResult = returnResult | 0x4;
+	return returnResult;
+	
+}
+
+void CellularField::make_WolrframCellularAutomata_Iteration(uint8_t rule)
+{
+	std::map<uint8_t, bool> ruleMap;
+	for (uint8_t i = 0; i < 8; i++)
+	{
+		ruleMap[i] = (((rule >> i) & 0x1) == 1);
+	}
+	std::vector < std::vector<bool>> newConditionBuffer;
+	for (int i = 0; i < this->cells.size(); i++)
+	{
+		std::vector<bool> rowNewCond;
+		for (int j = 0; j < this->cells.at(i).size(); j++)
+		{
+			uint8_t cellnum = this->get_Byte_fromWolframSpace(j, i);
+			if (cellnum != 0xFF)
+			{
+				rowNewCond.push_back(ruleMap[cellnum]);
+			}
+			else rowNewCond.push_back(false);
+		}
+		newConditionBuffer.push_back(rowNewCond);
+	}
+	for (int i = 0; i < this->cells.size(); i++)
+	{
+
+		for (int j = 0; j < this->cells.at(i).size(); j++)
+		{
+			this->cells.at(i).at(j).set_isCellAlive(newConditionBuffer.at(i).at(j));
+		}
+	}
+
+}
+uint8_t CellularField::get_Byte_inFonNeimanSpace(int xPos, int yPos)
+{
+	return 0;
 }
 
 void CellularField::make_ConwayLife_iteration()

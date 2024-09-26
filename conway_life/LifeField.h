@@ -3,6 +3,7 @@
 #include "cell.h"
 #include <vector>
 #include <math.h>
+#include <map>
 enum class TESTPATTERN
 {
 	CHESS_PATTERN,
@@ -21,7 +22,11 @@ public:
 	void set_startPoint(sf::Vector2f newStartPoint);
 	void testPatternDraw(TESTPATTERN inputPattern, int shift );
 	int get_NumberOfCells_inFonNeimanSpace(int xPos, int yPos);
+
+	uint8_t get_Byte_inFonNeimanSpace(int xPos, int yPos);
+	uint8_t get_Byte_fromWolframSpace(int xPos, int yPos);
 	void make_ConwayLife_iteration();
+	void make_WolrframCellularAutomata_Iteration(uint8_t rule);
 	sf::Vector2f get_cellShapeCoordsByPointCoords(sf::Vector2f coords);
 	bool get_conditionOfOneCell(sf::Vector2f coords);
 	void set_conditionOfOneCell(sf::Vector2f coords, bool input);

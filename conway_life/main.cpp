@@ -6,14 +6,21 @@
 
 void do_mouse_input(sf::RenderWindow &window, CellularField &cellField)
 {
+    static sf::Vector2i prevMousePos = sf::Vector2i{ 0,0 };
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-    sf::Vector2f cellpos = cellField.get_cellShapeCoordsByPointCoords(sf::Vector2f{(float)mousePos.x, (float)mousePos.y});
-    std::cout << cellpos.x << " " << cellpos.y << std::endl;
-    cellField.set_conditionOfOneCell(cellpos, cellField.get_conditionOfOneCell(cellpos));
+    if (mousePos != prevMousePos)
+    {
+        sf::Vector2f cellpos = cellField.get_cellShapeCoordsByPointCoords(sf::Vector2f{(float)mousePos.x, (float)mousePos.y});
+        std::cout << cellpos.x << " " << cellpos.y << std::endl;
+        cellField.set_conditionOfOneCell(cellpos, true);
+    }
+
+    prevMousePos = mousePos;
 }
 
 int main()
 {
+    bool runLife = false;
     srand(time(NULL));
     sf::RenderWindow window(sf::VideoMode(800, 800), "SFML works!");
     
@@ -26,8 +33,12 @@ int main()
     CellularField field{ sf::Vector2f{40.0f, 40.0f}, sf::Vector2f{700.0f, 700.0f }, sf::Color::White, sf::Color::Red, 3.0f, sf::Vector2f(100, 100)};
     
     sf::Clock clock;
+    sf::Clock inputClock;
     int shift = 42;
+    uint8_t rule = 0;
     field.testPatternDraw(TESTPATTERN::SIN_PATTERN, shift);
+    
+    bool isMouseAlreadyClicked = false;
     while (window.isOpen())
     {
         sf::Event event;
@@ -36,19 +47,45 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                
+                    //std::cout << "clicking mouse" << std::endl;
+                    do_mouse_input(window, field);
+                   
+                
+            }
+            if (inputClock.getElapsedTime().asMilliseconds() > 200)
+            {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            {
+                runLife = !runLife;
+                std::cout << "space called" << std::endl;
+                inputClock.restart();
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+            {
+                shift += 10;
+                field.testPatternDraw(TESTPATTERN::SIN_PATTERN, shift);
+                inputClock.restart();
+                rule+=10;
+            }
+            
+            }
+       
+        if (clock.getElapsedTime().asMilliseconds() > 100)
         {
-            //std::cout << "clicking mouse" << std::endl;
-            do_mouse_input(window, field);
-        }
-        if (clock.getElapsedTime().asMilliseconds() > 1000)
-        {
-            field.make_ConwayLife_iteration();
-            //std::cout << "test counter " << field.get_NumberOfCells_inFonNeimanSpace(1, 1) << std::endl;
+           
+            if (runLife)
+            {
+                //field.make_ConwayLife_iteration();
+                field.make_WolrframCellularAutomata_Iteration(rule);
+                //std::cout << "test counter " << field.get_NumberOfCells_inFonNeimanSpace(1, 1) << std::endl;
+            }
             window.clear(sf::Color::Black);
             field.cellFieldDraw(window);
             window.display();
-            
             clock.restart();
         }
     }

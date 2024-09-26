@@ -9,6 +9,8 @@ public:
 	void set_isCellAlive(bool input);
 	bool get_isCellAlive();
 	bool get_isPointInCell(sf::Vector2f pointCoords);
+	void increase_cellAge();
+	void nullify_cellAge();
 private:
 	sf::RectangleShape cellShape;
 	
@@ -17,4 +19,5 @@ private:
 	bool isCellAlive;
 	sf::Color aliveColor;
 	sf::Color deadColor;
+	int cellAge;
 };
